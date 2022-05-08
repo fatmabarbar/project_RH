@@ -1,0 +1,206 @@
+<div class="card">
+    <h5></h5>
+    <p-tabView>
+        <p-tabPanel header="Liste">
+            <p-toast></p-toast>
+
+
+            <div class="card">
+                <p-toolbar styleClass="p-mb-4">
+                    <ng-template pTemplate="left">
+                        <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2"
+                            (click)="openNewCreate()"></button>
+
+                    </ng-template>
+                </p-toolbar>
+
+                <p-table #dt [value]="autorisationdesorties" [rows]="10" [paginator]="true"
+                    [globalFilterFields]="['code','username','nomPrenom','tel']"
+                    [(selection)]="selectedautorisationdesorties" [rowHover]="true" dataKey="id"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                    [showCurrentPageReport]="true">
+                    <ng-template pTemplate="caption">
+                        <div class="p-d-flex p-ai-center p-jc-between">
+                            <h5 class="p-m-0">Manage autorisation de sortie</h5>
+                            <span class="p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                    placeholder="Search..." />
+                            </span>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 3rem">
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th>
+                            <th pSortableColumn="id">id <p-sortIcon field="id"></p-sortIcon>
+                            </th>
+
+                            <th pSortableColumn="heure_debut__autorisation">heure_debut__autorisation<p-sortIcon
+                                    field="heure_debut__autorisation"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="heure_fin__autorisation">heure_fin__autorisation<p-sortIcon
+                                    field="heure_fin__autorisation"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="duree">duree<p-sortIcon field="duree"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="raison">raison <p-sortIcon field="raison"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="etat">etat <p-sortIcon field="etat"></p-sortIcon>
+                            </th>
+
+                            <th></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-utilisateur>
+                        <tr>
+                            <td>
+                                <p-tableCheckbox [value]="utilisateur"></p-tableCheckbox>
+                            </td>
+                            <td>{{autorisationdesortie.id}}</td>
+                            <td>{{autorisationdesortie.heure_fin__autorisation}}</td>
+                            <td>{{autorisationdesortie.heure_fin__autorisation}}</td>
+                            <td>{{autorisationdesortie.duree}}</td>
+                            <td>{{autorisationdesortie.raison}}</td>
+                            <td>{{autorisationdesortie.etat}}</td>
+
+                            <td>
+                                <button pButton pRipple icon="pi pi-pencil"
+                                    class="p-button-rounded p-button-success p-mr-2"
+                                    (click)="editAutorisationdesortie(autorisationdesortie)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                                    (click)="deleteAutorisationdesortie(autorisationdesortie)"></button>
+                            </td>
+                        </tr>
+                    </ng-template>
+
+                </p-table>
+            </div>
+            <!--dialog update user-->
+            <p-dialog [(visible)]="autorisationdesortieDialog" [style]="{width: '650px'}" header="User Details"
+                [modal]="true" styleClass="p-fluid">
+                <ng-template pTemplate="content">
+
+                    <div class="p-field">
+                        <label for="id">id</label>
+                        <input type="text" pInputText id="id" [(ngModel)]="autorisationdesortie.id" required
+                            autofocus />
+                        <small class="p-invalid" *ngIf="submitted && !autorisationdesortie.id">id is required.</small>
+                    </div>
+                    <div class="p-field">
+                        <label for="raison">raison</label>
+                        <input type="text" pInputText id="login" [(ngModel)]="autorisationdesortie.raison" required
+                            autofocus />
+                    </div>
+
+                    <div class="p-field">
+                        <label for="etat">etat</label>
+                        <input type="etat" pInputText id="etat" [(ngModel)]="autorisationdesortie.etat" required
+                            autofocus />
+                    </div>
+
+                    <div class="p-field p-col-12 p-md-4">
+                        <label for="heure_debut__autorisation">heure_debut__autorisation</label>
+                        <p-calendar inputId="heure_debut__autorisation" name="heure_debut__autorisation" showTime="true"
+                            [hourFormat]="24" appendTo="body" (onBlur)="editing = !editing"
+                            [(ngModel)]="autorisationdesortie.heure_debut__autorisation"
+                            value="{{autorisationdesortie.heure_debut__autorisation  | date: 'dd/MM/yyyy hh:mm:ss' }}">
+                        </p-calendar>
+                        <p [hidden]="editing" (click)="editing = !editing">
+                            {{autorisationdesortie.heure_debut__autorisation | date: 'dd/MM/yyyy hh:mm:ss' }}
+                        </p>
+                    </div>
+                    <div class="p-field p-col-12 p-md-4">
+                        <label for="heure_fin__autorisation">heure_fin__autorisation</label>
+                        <p-calendar inputId="heure_fin__autorisation" name="heure_fin__autorisation" showTime="true"
+                            [hourFormat]="24" appendTo="body" (onBlur)="editing = !editing"
+                            [(ngModel)]="autorisationdesortie.heure_autorisation"
+                            value="{{autorisationdesortie.heure_fin__autorisation  | date: 'dd/MM/yyyy hh:mm:ss' }}">
+                        </p-calendar>
+                        <p [hidden]="editing" (click)="editing = !editing">
+                            {{autorisationdesortie.heure_fin__autorisation | date: 'dd/MM/yyyy hh:mm:ss' }}
+                        </p>
+                    </div>
+                    <div class="p-field">
+                        <label for="duree">duree</label>
+                        <input type="duree" pInputText id="duree" [(ngModel)]="autorisationdesortie.duree" required
+                            autofocus />
+                    </div>
+
+
+                </ng-template>
+
+                <ng-template pTemplate="footer">
+                    <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                        (click)="hideDialog()"></button>
+                    <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+                        (click)="saveAutorisationdesortie()"></button>
+                </ng-template>
+            </p-dialog>
+            <!-- dialog create user-->
+            <p-dialog [(visible)]="autorisationdesortieCreateDialog" [style]="{width: '650px'}" header="User Details"
+                [modal]="true" styleClass="p-fluid">
+                <ng-template pTemplate="content">
+                    <div class="p-field">
+                        <label for="name">id</label>
+                        <input type="text" pInputText id="code" [(ngModel)]="autorisationdesortie.id" required
+                            autofocus />
+                        <small class="p-invalid" *ngIf="submitted && !autorisationdesortie.id">id is required.</small>
+                    </div>
+                    <div class="p-field">
+                        <label for="name">raison</label>
+                        <input type="text" pInputText id="login" [(ngModel)]="autorisationdesortie.raison" required
+                            autofocus />
+                    </div>
+                    <div class="p-field">
+                        <label for="etat">etat</label>
+                        <input type="text" pInputText id="etat" [(ngModel)]="autorisationdesortie.etat" required
+                            autofocus />
+                    </div>
+
+
+                    <div class="p-field p-col-12 p-md-4">
+                        <label for="heure_debut__autorisation">heure_debut__autorisation</label>
+                        <p-calendar inputId="heure_debut__autorisation" name="heure_debut__autorisation" showTime="true"
+                            [hourFormat]="24" appendTo="body" (onBlur)="editing = !editing"
+                            [(ngModel)]="autorisationdesortie.heure_debut__autorisation"
+                            value="{{autorisationdesortie.heure_debut__autorisation  | date: 'dd/MM/yyyy hh:mm:ss' }}">
+                        </p-calendar>
+                        <p [hidden]="editing" (click)="editing = !editing">
+                            {{autorisationdesortie.heure_debut__autorisation | date: 'dd/MM/yyyy hh:mm:ss' }}
+                        </p>
+                    </div>
+                    <div class="p-field p-col-12 p-md-4">
+                        <label for="heure_fin__autorisation">heure_fin__autorisation</label>
+                        <p-calendar inputId="heure_fin__autorisation" name="heure_fin__autorisation" showTime="true"
+                            [hourFormat]="24" appendTo="body" (onBlur)="editing = !editing"
+                            [(ngModel)]="autorisationdesortie.heure_fin__autorisation"
+                            value="{{autorisationdesortie.heure_fin__autorisation  | date: 'dd/MM/yyyy hh:mm:ss' }}">
+                        </p-calendar>
+                        <p [hidden]="editing" (click)="editing = !editing">
+                            {{autorisationdesortie.heure_fin__autorisation | date: 'dd/MM/yyyy hh:mm:ss' }}
+                        </p>
+                    </div>
+                    <div class="p-field">
+                        <label for="duree">duree</label>
+                        <input type="duree" pInputText id="duree" [(ngModel)]="autorisationdesortie.duree" required
+                            autofocus />
+                    </div>
+
+
+                </ng-template>
+
+                <ng-template pTemplate="footer">
+                    <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                        (click)="hideDialogCreate()"></button>
+                    <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+                        (click)="CreateAutorisationdesortie()"></button>
+                </ng-template>
+            </p-dialog>
+
+
+            <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+        </p-tabPanel>
+    </p-tabView>
+</div>
